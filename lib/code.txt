@@ -1,0 +1,30 @@
+class linkParser(HTMLParser):
+     links = []
+     mainlink = ''
+
+     def parse(self, link, data):
+         self.reset()
+         self.mainlink = link
+         self.feed(data)
+         return self.links
+         
+     def handle_starttag(self, tag, attrs):
+         if not tag == 'a': return;
+         try: attrs[0][1]
+         except IndexError: return
+         
+         link = str(attrs[0][1].encode('utf8'))
+         now_domain = urlparse(link)
+         main_domain = urlparse(str(self.mainlink))
+         path = now_domain[2] if now_domain[2][:1] == '/' else '/' + now_domain[2]
+         
+         if now_domain[1] == '' or now_domain[1] == main_domain[1]:
+             full_link = main_domain[0] + '://' + main_domain[1] + path
+             if full_link not in self.links and full_link != self.mainlink and (now_domain[0] == u'http' or now_domain[0] == ''):
+                 self.links.append(full_link)
+  
+UPDATE table SET id=-3 WHERE id=3;
+UPDATE table SET id=3 WHERE id=10;
+UPDATE table SET id=10 WHERE id=-3;
+
+    
