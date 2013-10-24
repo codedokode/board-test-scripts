@@ -3,12 +3,23 @@
 error_reporting(-1);
 mb_internal_encoding('utf-8');
 ini_set('memory_limit', '256M');
+require_once __DIR__.'/lib-melanchthon.php';
+
+spl_autoload_register('tsAutoloader');
 
 bootstrapApp();
 
-function getPdo() {
-    return core_BDClient::getInstance()->getDb();
+function tsAutoloader($class_name) {
+
+    $basePath = __DIR__;
+    $path = explode('_', $class_name);
+    $filePath = $basePath. '/' . implode("/", $path) . '.php';
+
+    if (file_exists($filePath)) {
+        require_once $filePath;
+    }
 }
+
 
 function getAppDir() {
     return dirname(dirname(__DIR__));
@@ -22,38 +33,6 @@ function getConfig() {
     }
 
     return $config;
-}
-
-function bootstrapApp() {
-    static $boostrapped = false;
-    if ($boostrapped) {
-        return;
-    }
-
-    $boostrapped = true;
-    $arrayConfig = getConfig();
-    spl_autoload_register('autoloader');
-    $connect = core_BDClient::getInstance($arrayConfig['dbName'], $arrayConfig['dbUser'], $arrayConfig['dbPass']);    
-    $connect->getDb()->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $QueryInfoObject = core_QueryInfo::getInstance();
-    $QueryInfoObject->boolFlag = false;
-}
-
-function autoloader($class_name) {
-
-    $basePathApp = dirname(dirname(__DIR__));
-    $basePath = __DIR__;
-
-    $path = explode('_', $class_name);
-    $filePath = $basePath. '/' . implode("/", $path) . '.php';
-    $filePathApp = $basePathApp . '/' . implode("/", $path) . '.php';
-
-    if (file_exists($filePath)) {
-        require_once $filePath;
-        return;
-    }
-
-    require_once($filePathApp);
 }
 
 function printStats($time, $count, $action = 'Operation') {

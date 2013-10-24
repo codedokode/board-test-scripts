@@ -166,7 +166,7 @@ class Generator
         return $this->loadWordList('words', 'words.txt');
     }
 
-    private function generateTopic()
+    public function generateTopic()
     {
         $type = mt_rand(1, 20);
         if ($type > 16) {
@@ -186,7 +186,7 @@ class Generator
         return $result;
     }
 
-    private function getRandomName()
+    public function getRandomName()
     {
         return $this->selectOne($this->getNamesList());
     }    
@@ -220,7 +220,7 @@ class Generator
         return implode(' ', $sentenceWords);
     }
 
-    private function generateText($minSentences = 1, $maxSentences = 20, $maxWords = 12)
+    public function generateText($minSentences = 1, $maxSentences = 20, $maxWords = 12)
     {
         $sentences = mt_rand($minSentences, $maxSentences);
 
@@ -323,26 +323,5 @@ class Generator
             $comment = $this->generateCommentText();
             echo "\n--\n" . $comment . "\n\n";
         }
-    }
-
-    public function generatePost()
-    {
-        $post = new core_Post();
-        $post->title = '';
-        $post->content = $this->generateText();
-
-        if (mt_rand(1, 100) < 60) {
-            $post->title = $this->generateTopic();
-        }
-
-        return $post;        
-    }
-
-    public function generateComment()
-    {
-        $comment = new core_Comment();
-        $comment->content = $this->generateCommentText();
-
-        return $comment;
     }
 }

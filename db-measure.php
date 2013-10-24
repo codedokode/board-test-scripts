@@ -3,7 +3,7 @@
 require_once __DIR__ . '/lib/lib.php';
 
 $count = isset($argv[1]) ? $argv[1] : 0;
-$url = '/board/';
+$url = boardGetBaseUrl(); 
 
 if (empty($count)) {
     die("Usage: script count\nPulls URL and measures response times\n");
@@ -20,8 +20,7 @@ measureTimes($count, function () use ($url) {
 
     setupRequest($url, $get, $post);    
     $html = captureOutput(function () {
-        $route = new core_Router();
-        $route->start();
+        boardRun();
     });
 
     if (strlen($html) < 100) {

@@ -55,22 +55,13 @@ printMemoryUsage();
 
 function createRandomPost($pdo, $generator, $fakeTime) 
 {
-    $post = $generator->generatePost();
-    $post->time = $fakeTime;
-    $model = new Application_Models_Post();
-    $model->add($post);
-
-    return $pdo->lastInsertId();
+    $post = boardCreatePost($generator, $fakeTime);
+    return boardInsertPost($pdo, $post);
 }
 
 function createRandomComment($pdo, $generator, $postId, $number, $fakeTime)
 {
-    $comment = $generator->generateComment();
-    $comment->post_id = $postId;
-    $comment->time = $fakeTime;
-    $model = new Application_Models_Comment();
-    $model->add($comment);
-
-    return $pdo->lastInsertId();
+    $comment = boardCreateComment($generator, $postId, $fakeTime);
+    return boardInsertComment($pdo, $comment);
 }
 
